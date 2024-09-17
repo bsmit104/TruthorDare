@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Truth or Dare Bot</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #000000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .chat-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      .chat-box {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        height: 150px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+      }
+      .chat-input {
+        width: calc(100% - 40px);
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .send-btn {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div id="chat-box" class="chat-box"></div>
+      <input
+        id="chat-input"
+        class="chat-input"
+        placeholder="Type 'Truth' or 'Dare'"
+      />
+      <button id="send-btn" class="send-btn">Send</button>
+    </div>
+
+    <script>
+      const truths = [
+        "What is your biggest fear?",
+        "What is your most embarrassing moment?",
+        "Have you ever lied to a friend?",
+        "What is the worst thing you've ever done?",
+      ];
+      const dares = [
+        "Text your crush and confess your love (or make up something funny).",
+        "Do your best impression of someone in this room until someone guesses who it is.",
+        "Let the person to your left redo your hairstyle however they like.",
+        "Post the most embarrassing photo on your phone to your social media.",
+        "Speak in an accent of your choice for the next three rounds.",
+        "Sing a song chosen by the group while doing a silly dance.",
+        "Send a voice note to someone you haven’t spoken to in a year.",
+        "Eat a spoonful of the weirdest combination of ingredients the group can find.",
+        "Let someone text anyone from your phone (no explanation until the game ends).",
+        "Wear socks on your hands for the next five rounds.",
+        "Do 10 push-ups, then take a shot of lemon juice.",
+        "Act out a scene from your favorite movie with someone else.",
+        "Let the group choose your profile picture on social media for the next hour.",
+        "Talk in third person for the next three rounds.",
+        "Pretend you’re a waiter and serve imaginary food to everyone in the room.",
+        "Let someone write a phrase on your forehead in marker.",
+        "Do your best celebrity impression until someone guesses who you are.",
+        "Give someone a piggyback ride around the room.",
+        "Make a funny TikTok with someone, then post it.",
+        "Let someone scroll through your phone for 60 seconds and read any text out loud.",
+        "Let someone blindfold you and guide you around the room for 3 minutes while you act like their pet.",
+    "Do a handstand against the wall for as long as you can, or attempt one if you can’t do it.",
+    "Let someone in the group put makeup on you, however they want, while everyone watches.",
+    "Run outside and sing a song at the top of your lungs for the next minute.",
+    "Let someone give you a weird hairstyle with whatever they can find in the room.",
+    "Do an interpretive dance to a song chosen by the group, and take it seriously.",
+    "Act out a movie scene picked by the group for 2 minutes while using random items around the room as props.",
+    "Hold a plank for as long as you can while the group teases you to try to make you laugh.",
+    "Let someone else in the group dress you up in whatever they want from their clothes or items nearby.",
+    "Walk on your knees around the room for the next 3 minutes, narrating it like an action movie.",
+    "Do 15 burpees while maintaining eye contact with someone in the group.",
+    "Let the group wrap you in toilet paper like a mummy and take a picture.",
+    "Go outside and do the most embarrassing dance moves you can for 2 minutes, no breaks.",
+    "Act out your morning routine like you're in a silent movie.",
+    "Let someone in the group draw a temporary tattoo on you using markers or pens.",
+    "Do 20 jumping jacks while telling an embarrassing story from your past.",
+    "Pretend to be someone else in the group for the next 5 minutes, including how they walk, talk, and act.",
+    "Do a lap around the house or block while hopping on one foot.",
+    "Carry someone in the group across the room like they’re royalty.",
+    "Let the group choose a random object, and balance it on your head for 2 minutes without letting it fall.",
+    "Do your best runway model walk, but with an over-the-top dramatic flair, and strike a pose at the end.",
+    "Hold a wall-sit for 90 seconds while reciting the alphabet backward.",
+    "Let someone wrap your arms in cling wrap and try to complete a small challenge without using your hands.",
+    "Improvise a 30-second workout routine for the group, leading them like you’re their trainer.",
+    "Let someone else style your hair however they want using only things they can find in the room.",
+    "Crawl around the room while doing your best impression of a dog for 1 minute.",
+    "Act out an argument between two random objects (like a chair and a spoon) as if they are people.",
+    "Get down on all fours and act like a baby for the next two minutes while someone ‘babysits’ you.",
+    "Do 25 push-ups, or as many as you can, while someone gives you silly, distracting instructions.",
+    "Let someone throw soft items (like pillows) at you while you try to dodge them for 1 minute.",
+    "Walk backward around the room for 3 minutes while narrating your life as if it’s a documentary.",
+    "Create a human pyramid with the group, with you on the bottom.",
+    "Act out a soap opera scene with someone else in the group for 2 minutes, complete with dramatic expressions.",
+    "Do a slow-motion race with someone across the room as if it’s in an epic sports movie.",
+    "Let someone in the group tie your legs together and try to walk across the room.",
+    "Improvise a song about random objects in the room, and perform it like it’s a concert.",
+    "Do a piggyback race with someone else in the group around the room.",
+    "Pretend to be in slow motion for the next 3 minutes, interacting with others as if everything is happening slowly.",
+    "Let someone create a superhero alter ego for you, and act like that superhero for the next 5 minutes.",
+    "Pretend to be a statue, and let someone in the group pose you however they want for 2 minutes.",
+    "Do a cartwheel or attempt one, no matter how awkward it looks.",
+    "Let someone tickle you for 30 seconds while you try not to laugh.",
+    "Carry someone around the room like a firefighter carrying a victim for 1 minute.",
+    "Do a silly walk around the room for the next 3 minutes like you’re in a comedy skit.",
+    "Jump up and down while clapping your hands above your head for 2 minutes straight.",
+    "Let the group wrap you in blankets and pillows until you look like a burrito.",
+    "Create a dramatic fight scene with someone using only slow-motion moves and sound effects.",
+    "Pretend you're a robot, and let someone control your movements for 2 minutes.",
+    "Do a backbend or attempt one while everyone watches.",
+    "Let someone else blindfold you and feed you a mystery food item of their choice.",
+    "Try to balance a spoon on your nose for as long as you can while walking across the room.",
+    "Stand on one leg while reciting the alphabet as fast as possible.",
+    "Let someone toss a balloon in the air, and keep it from touching the ground for 2 minutes.",
+    "Do 50 jumping jacks while the group counts down, trying to distract you.",
+    "Pretend you’re a professional wrestler and challenge someone to an imaginary match.",
+    "Let the group blindfold you, spin you around, and give you a random object to identify by touch.",
+    "Do a crab walk across the room and back without falling over.",
+    "Make up a 2-minute stand-up comedy routine on the spot and perform it.",
+    "Pretend to be a monkey and swing around the room as if you're in a jungle for 2 minutes.",
+    "Let someone in the group tie your shoelaces together and try to walk without falling.",
+    "Crawl across the room backward while barking like a dog.",
+    "Let the group create a silly obstacle course for you, and complete it without knocking anything over.",
+    "Try to keep a straight face while everyone else in the group does their best to make you laugh.",
+    "Pretend to be a ballet dancer and perform an exaggerated dance routine for 1 minute.",
+    "Let someone in the group use random objects to create a ‘hat’ for you, and wear it for the next 10 minutes.",
+    "Hop on one foot around the room while balancing an object on your head.",
+    "Let someone direct you as if you're a puppet, making you do silly actions for 2 minutes.",
+    "Spin around 10 times and try to walk in a straight line afterward.",
+    "Do your best superhero pose, and stay in that position while the group takes pictures.",
+    "Let someone else in the group paint your face with washable paint or makeup.",
+    "Try to limbo under a chair or table without touching it.",
+    "Do your best breakdancing moves, even if you have no idea how to breakdance.",
+    "Balance an object on your head while doing 10 squats.",
+    "Pretend to be stuck in quicksand, slowly sinking for 1 minute, and let the group ‘rescue’ you.",
+    "Do 30 seconds of jumping jacks, followed by 30 seconds of pretending to be an airplane.",
+    "Let someone wrap a scarf or belt around your legs, and try to hop across the room.",
+    "Pretend to be a robot malfunctioning, and let the group try to ‘fix’ you.",
+    "Do your best martial arts moves while someone narrates a fake action scene.",
+    "Pretend to walk through an invisible maze for 2 minutes, miming every obstacle.",
+    "Do 10 push-ups while reciting your favorite tongue twister.",
+    "Let someone pour a small amount of water in your hands, and try to balance it for 1 minute without spilling.",
+    "Let someone tape your legs together and try to hop around the room without falling.",
+    "Do a silly conga line around the room with everyone joining in behind you.",
+    "Pretend to be a famous chef and give a tutorial on how to make the best peanut butter and jelly sandwich.",
+    "Let someone build a ‘tower’ on your head with random objects, and try to keep it balanced for 2 minutes.",
+    "Play a game of charades with yourself, acting out three random things chosen by the group.",
+    "Let someone create a ‘magic spell’ for you, and act out whatever they say the spell does.",
+    "Pretend to swim across the room like you’re in a giant pool for 2 minutes.",
+    "Do a forward roll or somersault, even if it’s awkward or uncomfortable.",
+    "Let someone blindfold you and give you instructions to find an object in the room.",
+    "Pretend to be an opera singer and perform a dramatic 30-second song.",
+    "Do 15 squats while holding a random object someone else chooses.",
+    "Act like a news reporter and deliver a breaking news story about the group.",
+    "Run around the room as fast as you can while pretending you're late for something important.",
+    "Pretend you’re climbing an invisible mountain and narrate the entire journey for 2 minutes.",
+    "Do 10 push-ups while someone in the group sits on your back (or at least tries!).",
+    "Let someone create an obstacle course out of furniture, and complete it on all fours.",
+    "Do a slow-motion lap around the room while narrating your inner thoughts out loud.",
+    "Let someone else pick an embarrassing dance move for you, and perform it for 2 minutes straight.",
+    "Stand in the middle of the room and let everyone else pose you like a mannequin.",
+    "Pretend you’re walking down a runway in an awkward outfit, complete with exaggerated poses.",
+    "Let someone tie your hands behind your back and try to complete a small task without using them.",
+    "Crawl under the table and narrate your ‘journey’ as if you're exploring a cave.",
+    "Do 15 jumping jacks while maintaining awkward eye contact with someone in the group.",
+    "Pretend to give a speech at your own wedding, but make it as awkward as possible.",
+    "Let someone else in the group redo your hair in the silliest way they can think of, and keep it for the next 10 minutes.",
+    "Dance around the room like a ballerina, but do it as awkwardly and clumsily as possible.",
+    "Pretend to be stuck in an invisible box, and let someone else try to ‘pull’ you out.",
+    "Run around the room pretending you’re being chased by an imaginary monster.",
+    "Let someone wrap you in toilet paper like a ‘mummy’ and try to walk around without it unraveling.",
+    "Do a belly crawl across the room while making animal noises.",
+    "Let someone draw a funny face on your stomach with markers and then show everyone.",
+    "Pretend to give an awkward job interview to a random object in the room.",
+    "Act like a statue for 1 minute, and let someone pose you in an embarrassing position.",
+    "Walk backward around the room for 2 minutes while narrating an awkward story about yourself.",
+    "Let someone in the group pick a random body part for you to pretend is stuck to the floor for 2 minutes.",
+    "Pretend you’re a superhero with an embarrassing power, and show the group how it works.",
+    "Hold someone’s hand for 2 minutes without breaking eye contact while speaking awkward compliments.",
+    "Do your best impression of a baby learning to walk across the room.",
+    "Pretend you’re in a soap opera and over-dramatically react to everything happening around you for 2 minutes.",
+    "Let someone in the group rearrange your clothes however they want and wear it for the next 10 minutes.",
+    "Sit on the floor and pretend to row a boat while narrating an awkward adventure.",
+    "Pretend to be an alien trying to understand how human objects work, while interacting with things in the room.",
+    "Do 10 awkward yoga poses as quickly as you can, without laughing.",
+    "Let someone give you awkward instructions to follow while everyone watches you try to complete them.",
+    "Walk around the room like you have gum stuck to the bottom of your shoe.",
+    "Pretend you’re trying to catch an invisible butterfly for 2 minutes.",
+    "Let someone in the group feed you something awkward like a baby while everyone else watches.",
+    "Do a slow-motion cartwheel or somersault, even if you’ve never done one before.",
+    "Pretend to be a waiter in an awkward situation, serving imaginary food to the group.",
+    "Let someone in the group tape an embarrassing sign to your back, and walk around the room with it for 5 minutes.",
+    "Walk around the room while pretending you’re trying to avoid stepping on imaginary bugs.",
+    "Do an awkward fitness routine for 2 minutes, complete with weird stretches and movements.",
+    "Pretend you’re stuck in slow motion for 2 minutes, interacting with the group as awkwardly as possible.",
+    "Let someone give you a silly ‘makeover’ using only things found in the room.",
+    "Do a slow, exaggerated moonwalk across the room while making dramatic sound effects.",
+    "Try to have a normal conversation with someone, but you have to whisper everything awkwardly.",
+    "Pretend you’re a clumsy spy sneaking around the room without getting caught for 2 minutes.",
+    "Let someone else in the group pretend to be your mirror, and you have to copy everything they do for 2 minutes.",
+    "Walk around the room while pretending you’re in a silent movie, exaggerating every move.",
+    "Do a crab walk while someone in the group gives you silly instructions to follow.",
+    "Let someone in the group move your limbs around like a puppet while you try to act normally.",
+    "Stand in the middle of the room and let the group create a human ‘sculpture’ using you as the base.",
+    "Pretend you’re auditioning for an awkward talent show with a completely made-up talent.",
+    "Let someone blindfold you and direct you around the room while you act like an awkward robot.",
+    "Do your best impression of an awkward, clumsy giraffe trying to run.",
+    "Pretend you’re giving an awkward award acceptance speech, thanking everyone for the most ridiculous things.",
+    "Walk around the room like you’re balancing something heavy on your head, even though nothing is there.",
+    "Act like a clumsy pirate trying to navigate a shipwreck for 2 minutes.",
+    "Let someone tie your shoes together and try to walk across the room without tripping.",
+    "Stand in the corner for 1 minute, and let the group give you weird instructions to follow while staying in place.",
+    "Pretend to swim through an imaginary pool of jello while making exaggerated movements.",
+    "Walk around the room like you’re wearing invisible high heels, wobbling dramatically.",
+    "Do a dramatic and awkward slow-motion fall, complete with sound effects.",
+    "Let someone in the group pick an embarrassing song for you to lip-sync and dance to.",
+    "Do a crab walk around the entire room while making crab noises.",
+    "Run in place for 3 minutes while telling a funny story.",
+    "Do 20 high knees while making the loudest chicken noises you can.",
+    "Hop like a kangaroo from one side of the room to the other, and back.",
+    "Hold a wall-sit for 90 seconds while pretending to be a frog.",
+    "Do 10 push-ups while barking like a dog after each one.",
+    "Walk on your hands and knees while pretending you're a baby for 2 minutes.",
+    "Pretend you’re an astronaut on the moon and do a slow-motion moonwalk around the room.",
+    "Spin around 10 times and try to balance on one foot for 30 seconds.",
+    "Do 15 squats while pretending you're riding a horse and narrating it.",
+    "Pretend you're a ninja sneaking around the room without making a sound.",
+    "Do 20 jumping jacks while shouting 'I love dancing!' after each one.",
+    "Pretend to be a cat stuck in a tree and let the group try to 'rescue' you.",
+    "Do 10 cartwheels or somersaults (attempt them if you can’t).",
+    "Pretend you’re a bird, flapping your arms and flying around the room for 2 minutes.",
+    "Do 10 burpees while making superhero sound effects.",
+    "Let someone in the group lead you in a silly workout routine for 2 minutes.",
+    "Walk around the room while pretending you're wading through thick mud.",
+    "Run in slow motion for 1 minute while narrating your actions as if it's an epic scene.",
+    "Do 20 lunges while pretending to be a robot that’s malfunctioning.",
+    "Pretend to row a boat around the room while narrating an adventurous voyage.",
+    "Do 10 jumping jacks while acting like a different animal for each one.",
+    "Try to balance a book on your head while walking backward for 2 minutes.",
+    "Do 15 push-ups while pretending you’re swimming through an imaginary ocean.",
+    "Do a headstand (or attempt one) while counting loudly to 20.",
+    "Pretend you're in a marching band and march around the room while playing an imaginary instrument.",
+    "Hold a plank for 60 seconds while making the weirdest faces you can.",
+    "Pretend you’re being chased by a giant monster and run around the room for 2 minutes.",
+    "Do 10 sit-ups while laughing as loud as you can after each one.",
+    "Pretend you're climbing a mountain and narrate your climb for 2 minutes.",
+    "Do a silly dance for 2 minutes, and make sure every move is exaggerated.",
+    "Pretend to be a robot for 2 minutes and let someone else in the group 'control' you.",
+    "Do 20 jumping jacks while singing your favorite song out loud.",
+    "Pretend you’re in a boxing match with an invisible opponent and throw punches for 1 minute.",
+    "Let someone in the group make up a silly song, and you have to sing it while doing push-ups.",
+    "Crawl across the room while pretending you're a worm.",
+    "Hold a yoga pose of your choice for 1 minute while reciting the alphabet backward.",
+    "Do 30 seconds of high knees while making random sound effects.",
+    "Pretend you're riding an invisible horse around the room while making horse sounds.",
+    "Spin around 15 times and then try to walk across the room without falling.",
+    "Do a bear crawl across the room while making bear growling noises.",
+    "Hold a tree pose for 1 minute while telling an embarrassing story.",
+    "Do 10 frog jumps while pretending you're a frog catching flies.",
+    "Pretend to be a zombie and stagger around the room while growling for 2 minutes.",
+    "Let the group blindfold you, and you have to do 10 jumping jacks while disoriented.",
+    "Run around the room pretending you're being chased by a swarm of bees.",
+    "Do a slow-motion dance for 2 minutes, making sure every move is dramatic.",
+    "Pretend to be a sumo wrestler and do a sumo stance for 1 minute while challenging others.",
+    "Crawl like a snake across the room while hissing loudly.",
+    "Pretend you're an Olympic sprinter and run in place for 2 minutes, narrating your race.",
+    "Do 15 squats while holding an imaginary heavy object above your head.",
+    "Hold a plank for 60 seconds while someone tries to make you laugh.",
+    "Pretend you're a basketball player and do an exaggerated slow-motion slam dunk.",
+    "Do 10 star jumps while shouting 'I’m a star!' after each jump.",
+    "Pretend you're a cowboy/girl and lasso an imaginary wild horse for 2 minutes.",
+    "Do a yoga warrior pose for 1 minute while making random animal noises.",
+    "Pretend to be a mime trapped in a box, trying to escape for 2 minutes.",
+    "Do 20 high knees while making funny faces at someone else in the room.",
+    "Pretend you're climbing a tree and narrate it as dramatically as possible for 2 minutes.",
+    "Pretend to be a superhero and create your own ridiculous superhero name and power.",
+    "Do a dramatic reading of a text message from your phone as if it's an award-winning speech.",
+    "Create a new dance move on the spot and teach it to everyone else.",
+    "Speak in an exaggerated robot voice for the next 5 minutes.",
+    "Try to juggle 3 random objects chosen by the group.",
+    "Pretend you’re on a cooking show and narrate how to make the weirdest dish ever.",
+    "Act like you’re on a game show and narrate everything you do like you’re about to win a prize.",
+    "Imitate a celebrity chosen by the group and give an awkward award acceptance speech.",
+    "Pretend you’re a cat stuck in a tree and ask someone in the group to ‘rescue’ you.",
+    "Do your best impersonation of a baby learning to walk across the room.",
+    "Create a new, silly handshake with the person sitting next to you.",
+    "Act like a tour guide showing people around the room, but make everything you describe ridiculous.",
+    "Pretend you’re auditioning for a talent show with a completely made-up, weird talent.",
+    "Do a slow-motion fight scene with someone else in the room, complete with sound effects.",
+    "Pretend you’re a robot trying to figure out how to drink water for the first time.",
+    "Let someone in the group draw a mustache on your face with a washable marker.",
+    "Narrate everything you do for the next 5 minutes like you're in a reality TV show.",
+    "Pretend to give a TED Talk on something completely random, like how to open a door.",
+    "Do 10 push-ups while pretending you're doing it in zero gravity.",
+    "Talk in a made-up language for the next 3 minutes, and let others try to ‘translate’ it.",
+    "Pretend to be an alien meeting humans for the first time, and ask them weird questions.",
+    "Create a funny TikTok dance with someone else and perform it in front of everyone.",
+    "Pretend to be a teacher explaining something incredibly simple, like tying shoelaces, in a very serious tone.",
+    "Walk around the room like you’re on a balance beam and dramatically overreact if you ‘fall.’",
+    "Pretend to be a baby animal and let the group guess which animal you are.",
+    "Narrate someone else’s actions like you’re the announcer of a nature documentary.",
+    "Pretend you’re a famous chef, and describe the most ridiculous dish you could ever make.",
+    "Walk around the room like a runway model, but exaggerate every pose and step.",
+    "Give the group a weather report as if you’re a news anchor, but make up ridiculous weather conditions.",
+    "Let someone in the group redo your hairstyle in the silliest way possible.",
+    "Pretend to be an over-enthusiastic fitness instructor and lead a ridiculous workout routine.",
+    "Speak in rhymes only for the next 5 minutes, even when answering questions.",
+    "Do a funny impression of your favorite cartoon character.",
+    "Pretend you’re giving a tour of a famous museum, but all the exhibits are imaginary and weird.",
+    "Let someone else pick a random object in the room, and you have to sell it like it’s an amazing new invention.",
+    "Pretend to be an angry coach giving a pep talk to a team that just lost a game.",
+    "Do a commercial for a random household item, making it sound like the best thing ever.",
+    "Pretend you’re an excited game show host and pick someone else to be the contestant.",
+    "Make up and sing a ridiculous song about something random in the room.",
+    "Pretend to be a DJ at a party and introduce a made-up dance move to the group.",
+    "Let someone else pose you like a mannequin, and stay in that position for 1 minute.",
+    "Do an exaggerated impression of someone in the group, and let the others guess who it is.",
+    "Pretend to be a newscaster, but every piece of news is ridiculous and made up.",
+    "Create a dramatic soap opera scene with someone in the group, complete with over-the-top acting.",
+    "Pretend to be a famous fashion designer, and describe the ridiculous outfits you're wearing.",
+    "Make up a bedtime story on the spot and tell it to the group.",
+    "Speak like you’re giving a motivational speech, but your topic is something super mundane like brushing your teeth.",
+    "Pretend to be a dog for 2 minutes, interacting with the group and doing dog-like things.",
+    "Let someone blindfold you and feed you something while you try to guess what it is.",
+    "Pretend to be a very serious judge, and ‘judge’ random objects in the room.",
+    "Make up a country song about something completely random in the room.",
+    "Pretend to be a magician, and do a ridiculous magic trick with random objects.",
+    "Pretend to be an infomercial host, selling something silly like a paperclip or a sock.",
+    "Do an exaggerated version of your favorite dance move for 1 minute.",
+    "Let someone else in the group invent a silly new name for you, and use that name for the next 10 minutes.",
+    "Pretend to be a motivational speaker giving advice on how to eat a sandwich.",
+    "Narrate your life as if it’s a sitcom for the next 5 minutes, complete with a laugh track.",
+    "Pretend you’re on a dating show and introduce yourself with the silliest facts you can think of.",
+    "Do a musical number from a famous movie, but perform it as awkwardly as possible.",
+
+    "See who can hold a plank position the longest.",
+    "Have a thumb war, and the winner is the one who can pin the other’s thumb for 10 seconds.",
+    "Race to see who can do 20 jumping jacks the fastest.",
+    "Have a balloon popping contest: who can pop the most balloons with their body in 1 minute?",
+    "Compete to see who can make the silliest face and hold it for 30 seconds.",
+    "See who can balance a book on their head the longest while walking around the room.",
+    "Challenge each other to a push-up contest: who can do the most push-ups in 1 minute?",
+    "Who can create the funniest dance move? Perform your moves for 1 minute and let others judge.",
+    "Race to see who can tie a shoelace the fastest with their eyes closed.",
+    "See who can blow up a balloon the biggest without it popping.",
+    "Compete in a silly walk race from one end of the room to the other.",
+    "See who can hold their breath the longest.",
+    "Have a paper airplane flying contest: who can make theirs fly the farthest?",
+    "Race to see who can stack the most blocks or cups in 1 minute.",
+    "Have a cookie-eating contest: who can eat a cookie without using their hands the fastest?",
+    "See who can come up with the funniest rap on the spot.",
+    "Challenge each other to a quick game of rock-paper-scissors: best out of five.",
+    "Race to see who can complete a puzzle the fastest.",
+    "Have a competition to see who can come up with the most creative use for a paperclip.",
+    "See who can balance on one leg the longest.",
+    "Have a water-drinking contest: who can drink a glass of water the fastest?",
+    "Challenge each other to a quick round of trivia questions: who can answer the most correctly?",
+    "Race to see who can fold the most paper airplanes in 1 minute.",
+    "See who can perform the most sit-ups in 1 minute.",
+    "Have a guessing contest: who can guess the most random objects blindfolded?",
+    "Challenge each other to a quick game of charades: who can guess the most actions correctly?",
+    "Race to see who can create the tallest tower with spaghetti and marshmallows.",
+    "See who can do the most jumping jacks in 1 minute.",
+    "Have a competition to see who can create the best drawing with their non-dominant hand.",
+    "Race to see who can change a diaper on a doll the fastest.",
+    "Challenge each other to a quick game of memory: who can remember the most items in a list?",
+    "See who can make the funniest face while eating a lemon slice.",
+    "Have a competition to see who can come up with the best joke on the spot.",
+    "Race to see who can blow a feather the farthest across the room.",
+    "Challenge each other to a quick round of 20 questions: who can guess the most items?",
+    "See who can do the most knee-bends in 1 minute.",
+    "Have a competition to see who can create the most ridiculous hat out of paper.",
+    "Race to see who can drink a glass of soda the fastest through a straw.",
+    "Challenge each other to a quick game of Simon Says: who can follow the most commands correctly?",
+    "See who can come up with the best original dance move.",
+    "Have a competition to see who can stack the most pennies or coins in 1 minute.",
+    "Race to see who can make the best paper hat.",
+    "Challenge each other to a quick game of Pictionary: who can draw and guess the most correctly?",
+    "See who can build the tallest free-standing structure out of marshmallows and spaghetti.",
+    "Have a competition to see who can come up with the funniest Instagram caption for a random photo.",
+    "Race to see who can perform the most wall-sits in 1 minute.",
+    "Challenge each other to a quick round of who can recite the most lines from a favorite movie.",
+    "See who can balance the most objects on their head in 1 minute.",
+    "Have a competition to see who can come up with the best impression of a famous person.",
+    "Race to see who can assemble a toy or model the fastest.",
+    "Challenge each other to a quick round of ‘guess the song’ by humming: who can guess the most correctly?",
+    "See who can make the most creative origami figure.",
+    "Have a competition to see who can drink a milkshake the fastest.",
+    "Race to see who can build the most creative structure out of LEGO bricks.",
+    "Challenge each other to a quick round of tongue twisters: who can say the most without messing up?",
+    "See who can come up with the funniest nickname for each other.",
+    "Have a competition to see who can make the best silly noise.",
+    "Race to see who can come up with the best pun on the spot.",
+    "Challenge each other to a quick round of ‘Who Am I?’ using funny characters.",
+    "See who can hold a yoga pose the longest.",
+    "Have a competition to see who can make the best paper boat that floats.",
+    "Race to see who can find and bring back the most items from a random list in 1 minute.",
+    "Challenge each other to a quick game of Who's the Best? with random tasks like singing, dancing, etc.",
+    "See who can do the most squats in 1 minute.",
+    "Have a competition to see who can come up with the best ‘fake’ product and give a pitch.",
+    "Race to see who can make the best balloon animal.",
+    "Challenge each other to a quick round of ‘Would You Rather?’ questions: who can come up with the best answers?",
+    "See who can create the funniest sound effect for a given action.",
+    "Have a competition to see who can make the most creative shadow puppet.",
+    "Race to see who can write the most funny and original limericks.",
+    "Challenge each other to a quick round of 'Guess the Number': who can guess the most numbers correctly?",
+    "See who can do the most ‘moonwalks’ across the room.",
+    "Have a competition to see who can come up with the most creative dance move.",
+    "Race to see who can write the best short story with a random prompt.",
+    "Challenge each other to a quick game of ‘Who’s Got Talent?’ with silly performances.",
+    "See who can come up with the most outrageous conspiracy theory on the spot.",
+    "Have a competition to see who can do the best ‘dramatic reading’ of a random sentence.",
+    "Race to see who can complete a mini obstacle course the fastest.",
+    "Challenge each other to a quick round of ‘Name That Tune’ with silly songs.",
+    "See who can come up with the best ridiculous superhero costume using random items.",
+    "Have a competition to see who can make the most creative paper airplane.",
+    "Race to see who can recite the most numbers in pi from memory.",
+    "Challenge each other to a quick round of ‘Describe the Object’ with random household items.",
+    "See who can come up with the funniest ‘fake’ product review.",
+    "Have a competition to see who can create the most elaborate finger puppet show.",
+    "Race to see who can perform the most creative and exaggerated ‘air guitar’ solo.",
+    "Challenge each other to a quick round of ‘Fastest Draw’ with silly drawings.",
+    "See who can do the most ‘air squats’ in 1 minute.",
+    "Have a competition to see who can come up with the funniest fake name for a pet.",
+    "Race to see who can create the most imaginative dance routine.",
+    "Challenge each other to a quick round of ‘Two Truths and a Lie’: who can guess the most correctly?",
+    "See who can come up with the most entertaining ‘fake’ news headline.",
+    "Have a competition to see who can write the best funny poem.",
+    "Race to see who can balance the most books on their head.",
+    "Challenge each other to a quick round of ‘Spot the Difference’ with silly pictures.",
+    "See who can make the most creative animal noises.",
+    "Have a competition to see who can come up with the funniest travel destination for a vacation.",
+    "Race to see who can complete a funny jigsaw puzzle the fastest.",
+    "Challenge each other to a quick round of ‘Guess the Sound’: who can identify the most sounds correctly?",
+    "See who can create the best ‘fake’ commercial for a random product.",
+    "Have a competition to see who can come up with the funniest superhero power.",
+    "Race to see who can perform the most silly stunts in 1 minute.",
+    "Challenge each other to a quick round of ‘Name That Movie’ with ridiculous scenes.",
+    "See who can create the most humorous and original character backstory.",
+    "Have a competition to see who can make the best funny ‘face swap’ with a photo.",
+    "Race to see who can come up with the most ridiculous excuse for being late.",
+    "Challenge each other to a quick round of ‘Funny Face Off’: who can make the silliest faces?",
+    "See who can come up with the best ‘fake’ motivational speech.",
+    "Have a competition to see who can create the most elaborate paper hat.",
+    "Race to see who can make the best ‘DIY’ craft out of random materials.",
+    "Challenge each other to a quick round of ‘Act it Out’ with silly prompts.",
+    "See who can come up with the funniest ‘fake’ conspiracy theory about a random topic.",
+    "Have a competition to see who can make the most creative shadow puppet show.",
+    "Race to see who can come up with the funniest original joke.",
+    "Challenge each other to a quick round of ‘Silly Charades’ with outrageous prompts.",
+    "See who can come up with the most entertaining ‘fake’ news report.",
+    "Have a competition to see who can make the most creative and funny drawing with their non-dominant hand.",
+    "Race to see who can come up with the most ridiculous superhero costume using only items from the room.",
+    "Challenge each other to a quick round of ‘Quick Draw’ with silly scenarios.",
+    "See who can make the most imaginative and funny face using makeup or face paint.",
+    "Have a competition to see who can write the most humorous limerick about an ordinary object.",
+    "Race to see who can complete the most creative ‘DIY’ challenge using household items.",
+    "Challenge each other to a quick round of ‘Funny Faces’ with random prompts.",
+    "See who can come up with the funniest and most creative fake commercial for a product.",
+    "Have a competition to see who can make the most entertaining and silly TikTok dance.",
+    "Race to see who can perform the best ‘silly walk’ across the room.",
+    "Challenge each other to a quick round of ‘Make a Mess’ with a funny twist.",
+    "See who can create the most outlandish and humorous imaginary holiday.",
+    "Have a competition to see who can come up with the funniest and most original pickup line.",
+    "Race to see who can build the tallest tower using only playing cards.",
+    "Challenge each other to a quick round of ‘Funny Interviews’ with made-up characters.",
+
+    
+
+      ];
+
+      const chatBox = document.getElementById("chat-box");
+      const chatInput = document.getElementById("chat-input");
+      const sendBtn = document.getElementById("send-btn");
+
+      function addChatMessage(message, sender = "user") {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = message;
+        messageDiv.className = sender;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      function getBotResponse(input) {
+        input = input.toLowerCase();
+        if (input === "truth") {
+          const randomTruth = truths[Math.floor(Math.random() * truths.length)];
+          return `Truth: ${randomTruth}`;
+        } else if (input === "dare") {
+          const randomDare = dares[Math.floor(Math.random() * dares.length)];
+          return `Dare: ${randomDare}`;
+        } else {
+          return "Please type either 'Truth' or 'Dare'.";
+        }
+      }
+
+      sendBtn.addEventListener("click", () => {
+        const userInput = chatInput.value;
+        if (userInput) {
+          addChatMessage(userInput);
+          const botResponse = getBotResponse(userInput);
+          setTimeout(() => {
+            addChatMessage(botResponse, "bot");
+          }, 500);
+          chatInput.value = "";
+        }
+      });
+    </script>
+  </body>
+</html>
