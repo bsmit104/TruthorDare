@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Board</title>
+    <link rel="stylesheet" href="competeStyles.css">
+</head>
+<body>
+    <div class="game-board">
+        <div class="square-container">
+            <!-- Squares will be generated via JavaScript -->
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="piece-controls">
+            <div class="piece-control red">
+                <button class="move-btn" data-color="red" data-direction="plus">+2</button>
+                <button class="move-btn" data-color="red" data-direction="minus">-3</button>
+            </div>
+            <div class="piece-control blue">
+                <button class="move-btn" data-color="blue" data-direction="plus">+2</button>
+                <button class="move-btn" data-color="blue" data-direction="minus">-3</button>
+            </div>
+            <div class="piece-control green">
+                <button class="move-btn" data-color="green" data-direction="plus">+2</button>
+                <button class="move-btn" data-color="green" data-direction="minus">-3</button>
+            </div>
+            <div class="piece-control yellow">
+                <button class="move-btn" data-color="yellow" data-direction="plus">+2</button>
+                <button class="move-btn" data-color="yellow" data-direction="minus">-3</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="prompt">Press the button to get a charades prompt!</div>
+    <button onclick="generatePrompt()">Generate Prompt</button>
+
+    <script>
+        let prompts = [];
+        let usedPrompts = [];
+
+        function loadPrompts() {
+            fetch('competition.json')
+                .then(response => response.json())
+                .then(data => {
+                    prompts = data;
+                    usedPrompts = [];
+                })
+                .catch(error => console.error('Error loading prompts:', error));
+        }
+
+        function generatePrompt() {
+            if (prompts.length === 0) {
+                document.getElementById('prompt').textContent = "Please wait, prompts are loading.";
+                return;
+            }
+
+            if (usedPrompts.length === prompts.length) {
+                document.getElementById('prompt').textContent = "Welp, you've done them all. Sorry!";
+                return;
+            }
+
+            let prompt;
+            do {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                prompt = prompts[randomIndex];
+            } while (usedPrompts.includes(prompt));
+
+            usedPrompts.push(prompt);
+            document.getElementById('prompt').textContent = prompt;
+        }
+
+        // Load the prompts on page load
+        document.addEventListener('DOMContentLoaded', loadPrompts);
+    </script>
+    <script src="competeScript.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-board">
+        <div class="square-container">
+        </div>
+        <div class="pieces">
+            <div class="piece red"></div>
+            <div class="piece blue"></div>
+            <div class="piece green"></div>
+            <div class="piece yellow"></div>
+        </div>
+    </div>
+    <div class="controls">
+        <div class="piece-controls">
+            <div class="controls-section red-controls">
+                <div class="color-box red"></div>
+                <button class="move-btn" data-color="red" data-direction="plus">+1</button>
+                <button class="move-btn" data-color="red" data-direction="minus">-2</button>
+            </div>
+            <div class="controls-section blue-controls">
+                <div class="color-box blue"></div>
+                <button class="move-btn" data-color="blue" data-direction="plus">+1</button>
+                <button class="move-btn" data-color="blue" data-direction="minus">-2</button>
+            </div>
+            <div class="controls-section green-controls">
+                <div class="color-box green"></div>
+                <button class="move-btn" data-color="green" data-direction="plus">+1</button>
+                <button class="move-btn" data-color="green" data-direction="minus">-2</button>
+            </div>
+            <div class="controls-section yellow-controls">
+                <div class="color-box yellow"></div>
+                <button class="move-btn" data-color="yellow" data-direction="plus">+1</button>
+                <button class="move-btn" data-color="yellow" data-direction="minus">-2</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> -->

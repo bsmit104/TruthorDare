@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEATH Charades</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #160025; /* Dark purple */
+            color: white; /* Text color for better contrast */
+        }
+        #prompt {
+            font-size: 24px;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DEATH Charades (online)</h1>
+    <div id="prompt">Press the button to get a charades prompt!</div>
+    <!-- <button onclick="generatePrompt()">Generate Prompt</button> -->
+    <div class="button-container">
+        <img src="assets/skull.png" alt="Generate Prompt" onclick="generatePrompt()">
+    </div>
+
+    <script>
+        let prompts = [];
+        let usedPrompts = [];
+
+        function loadPrompts() {
+            fetch('DeathCharadesPrompts.json')
+                .then(response => response.json())
+                .then(data => {
+                    prompts = data;
+                    usedPrompts = [];
+                })
+                .catch(error => console.error('Error loading prompts:', error));
+        }
+
+        function generatePrompt() {
+            if (prompts.length === 0) {
+                document.getElementById('prompt').textContent = "Please wait, prompts are loading.";
+                return;
+            }
+
+            if (usedPrompts.length === prompts.length) {
+                document.getElementById('prompt').textContent = "Welp, you've done them all. Sorry!";
+                return;
+            }
+
+            let prompt;
+            do {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                prompt = prompts[randomIndex];
+            } while (usedPrompts.includes(prompt));
+
+            usedPrompts.push(prompt);
+            document.getElementById('prompt').textContent = prompt;
+        }
+
+        // Load the prompts on page load
+        document.addEventListener('DOMContentLoaded', loadPrompts);
+    </script>
+</body>
+</html>
