@@ -30,7 +30,7 @@
         let usedPrompts = [];
 
         function loadPrompts() {
-            fetch('NerdCharadesPrompts.json')
+            fetch('NerdCharades.json')
                 .then(response => response.json())
                 .then(data => {
                     prompts = data;

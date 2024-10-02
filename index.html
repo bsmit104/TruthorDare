@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brayden's Mobile Game Hub</title>
@@ -18,7 +19,17 @@
         h1 {
             margin-bottom: 20px;
             text-align: center;
-            color: #02A9EA; /* Text color to stand out */
+            color: #02A9EA; /* Neon blue text color */
+            font-family: 'Neonderthaw', cursive; /* Apply the Neonderthaw font */
+            font-size: 60px; /* Increase size for better neon effect */
+            text-shadow: 
+                0 0 5px #fff,   /* White inner glow */
+                0 0 10px #fff,  /* White glow */
+                0 0 20px #02A9EA, /* Blue glow */
+                0 0 30px #02A9EA, 
+                0 0 40px #02A9EA, 
+                0 0 50px #02A9EA, 
+                0 0 75px #02A9EA; /* Outer blue glow */
         }
         .button-container {
             display: grid;
@@ -47,7 +58,7 @@
     </style>
 </head>
 <body>
-    <h1>Brayden's Mobile Game Hub</h1>
+    <h1>Brayden's Mobile<br>Game Hub</h1>
     <div class="button-container">
         <a href="NerdCharades.html">Nerd Charades</a>
         <a href="TorD.html">Truth or Dare</a>
